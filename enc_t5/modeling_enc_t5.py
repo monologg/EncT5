@@ -5,6 +5,7 @@ from torch import nn
 from torch.nn import BCEWithLogitsLoss, CrossEntropyLoss, MSELoss
 from transformers.modeling_outputs import SequenceClassifierOutput
 from transformers.models.t5.modeling_t5 import T5Config, T5PreTrainedModel, T5Stack
+from transformers.utils.model_parallel_utils import assert_device_map, get_device_map
 
 
 class EncT5ForSequenceClassification(T5PreTrainedModel):
@@ -29,6 +30,28 @@ class EncT5ForSequenceClassification(T5PreTrainedModel):
 
         # Initialize weights and apply final processing
         self.post_init()
+
+        # Model parallel
+        self.model_parallel = False
+        self.device_map = None
+
+    def parallelize(self, device_map=None):
+        self.device_map = (
+            get_device_map(len(self.encoder.block), range(torch.cuda.device_count()))
+            if device_map is None
+            else device_map
+        )
+        assert_device_map(self.device_map, len(self.encoder.block))
+        self.encoder.parallelize(self.device_map)
+        self.classifier = self.classifier.to(self.encoder.first_device)
+        self.model_parallel = True
+
+    def deparallelize(self):
+        self.encoder.deparallelize()
+        self.encoder = self.encoder.to("cpu")
+        self.model_parallel = False
+        self.device_map = None
+        torch.cuda.empty_cache()
 
     def get_input_embeddings(self):
         return self.shared
