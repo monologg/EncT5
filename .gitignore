@@ -134,3 +134,4 @@ dmypy.json
 .DS_Store
 
 test.ipynb
+eval_outputs/

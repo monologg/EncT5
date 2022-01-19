@@ -334,6 +334,11 @@ def main():
         use_auth_token=True if model_args.use_auth_token else None,
     )
 
+    # Resize embedding size as we added bos token
+    # NOTE DONT use `tokenizer.vocab_size`
+    if model.config.vocab_size < len(tokenizer.get_vocab()):
+        model.resize_token_embeddings(len(tokenizer.get_vocab()))
+
     # Preprocessing the raw_datasets
     if data_args.task_name is not None:
         sentence1_key, sentence2_key = task_to_keys[data_args.task_name]
