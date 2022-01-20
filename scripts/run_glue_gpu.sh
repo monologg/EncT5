@@ -1,12 +1,9 @@
 #!/bin/bash
-export XRT_TPU_CONFIG="localservice;0;localhost:51011"
-
 MODEL_NAME=google/t5-v1_1-base
 
 TASK_NAME=cola
 
-python3 xla_spawn.py --num_cores 8 \
-    run_glue.py \
+python3 run_glue.py \
     --model_name_or_path $MODEL_NAME \
     --task_name $TASK_NAME \
     --do_train \
@@ -28,11 +25,12 @@ python3 xla_spawn.py --num_cores 8 \
     --metric_for_best_model eval_matthews_correlation \
     --greater_is_better True \
     --early_stopping_patience 5
+
+rm -rf eval_outputs/*/checkpoint*
     
 TASK_NAME=sst2
 
-python3 xla_spawn.py --num_cores 8 \
-    run_glue.py \
+python3 run_glue.py \
     --model_name_or_path $MODEL_NAME \
     --task_name $TASK_NAME \
     --do_train \
@@ -57,8 +55,7 @@ python3 xla_spawn.py --num_cores 8 \
 
 TASK_NAME=mrpc
 
-python3 xla_spawn.py --num_cores 8 \
-    run_glue.py \
+python3 run_glue.py \
     --model_name_or_path $MODEL_NAME \
     --task_name $TASK_NAME \
     --do_train \
@@ -85,8 +82,7 @@ rm -rf eval_outputs/*/checkpoint*
 
 TASK_NAME=stsb
 
-python3 xla_spawn.py --num_cores 8 \
-    run_glue.py \
+python3 run_glue.py \
     --model_name_or_path $MODEL_NAME \
     --task_name $TASK_NAME \
     --do_train \
@@ -113,8 +109,7 @@ rm -rf eval_outputs/*/checkpoint*
 
 TASK_NAME=qqp
 
-python3 xla_spawn.py --num_cores 8 \
-    run_glue.py \
+python3 run_glue.py \
     --model_name_or_path $MODEL_NAME \
     --task_name $TASK_NAME \
     --do_train \
@@ -141,8 +136,7 @@ rm -rf eval_outputs/*/checkpoint*
 
 TASK_NAME=mnli
 
-python3 xla_spawn.py --num_cores 8 \
-    run_glue.py \
+python3 run_glue.py \
     --model_name_or_path $MODEL_NAME \
     --task_name $TASK_NAME \
     --do_train \
@@ -169,8 +163,7 @@ rm -rf eval_outputs/*/checkpoint*
 
 TASK_NAME=qnli
 
-python3 xla_spawn.py --num_cores 8 \
-    run_glue.py \
+python3 run_glue.py \
     --model_name_or_path $MODEL_NAME \
     --task_name $TASK_NAME \
     --do_train \
@@ -197,8 +190,7 @@ rm -rf eval_outputs/*/checkpoint*
 
 TASK_NAME=rte
 
-python3 xla_spawn.py --num_cores 8 \
-    run_glue.py \
+python3 run_glue.py \
     --model_name_or_path $MODEL_NAME \
     --task_name $TASK_NAME \
     --do_train \
