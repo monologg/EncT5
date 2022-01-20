@@ -39,6 +39,7 @@ from transformers import (
     default_data_collator,
     set_seed,
 )
+from transformers.trainer_callback import EarlyStoppingCallback
 from transformers.trainer_utils import get_last_checkpoint
 from transformers.utils import check_min_version
 from transformers.utils.versions import require_version
@@ -180,6 +181,13 @@ class ModelArguments:
         metadata={
             "help": "Will use the token generated when running `transformers-cli login` (necessary to use this script "
             "with private models)."
+        },
+    )
+    early_stopping_patience: int = field(
+        default=5,
+        metadata={
+            "help": "Use with metric_for_best_model to stop training when the specified metric worsens "
+            "for early_stopping_patience evaluation calls."
         },
     )
 
@@ -477,6 +485,7 @@ def main():
         compute_metrics=compute_metrics,
         tokenizer=tokenizer,
         data_collator=data_collator,
+        callbacks=[EarlyStoppingCallback(early_stopping_patience=model_args.early_stopping_patience)],
     )
 
     # Training
