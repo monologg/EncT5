@@ -62,7 +62,7 @@ task_to_keys = {
     "wnli": ("sentence1", "sentence2"),
 }
 
-logger = logging.getLogger(__name__)
+logger = transformers.logging.get_logger()
 
 
 @dataclass
@@ -212,16 +212,18 @@ def main():
         handlers=[logging.StreamHandler(sys.stdout)],
     )
 
-    log_level = training_args.get_process_log_level()
-    logger.setLevel(log_level)
-    datasets.utils.logging.set_verbosity(log_level)
-    transformers.utils.logging.set_verbosity(log_level)
+    transformers.logging.set_verbosity_info()
+    datasets.utils.logging.set_verbosity_warning()
     transformers.utils.logging.enable_default_handler()
     transformers.utils.logging.enable_explicit_format()
 
+    transformers.logging.get_logger("transformers.configuration_utils").setLevel(logging.ERROR)
+    transformers.logging.get_logger("transformers.modeling_utils").setLevel(logging.ERROR)
+    transformers.logging.get_logger("transformers.tokenization_utils_base").setLevel(logging.ERROR)
+
     # Log on each process the small summary:
     logger.warning(
-        f"Process rank: {training_args.local_rank}, device: {training_args.device}, n_gpu: {training_args.n_gpu}"
+        f"Process rank: {training_args.local_rank}, device: {training_args.device}, n_gpu: {training_args.n_gpu}, "
         + f"distributed training: {bool(training_args.local_rank != -1)}, 16-bits training: {training_args.fp16}"
     )
     logger.info(f"Training/evaluation parameters {training_args}")
