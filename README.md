@@ -28,6 +28,19 @@ datasets==1.17.0
 scikit-learn==0.24.2
 ```
 
+## How to Use
+
+```python
+from enc_t5 import EncT5ForSequenceClassification, EncT5Tokenizer
+
+model = EncT5ForSequenceClassification.from_pretrained("t5-base")
+tokenizer = EncT5Tokenizer.from_pretrained("t5-base")
+
+# Resize embedding size as we added bos token
+if model.config.vocab_size < len(tokenizer.get_vocab()):
+    model.resize_token_embeddings(len(tokenizer.get_vocab()))
+```
+
 ## Finetune on GLUE
 
 - Use `Huggingface Transformers Trainer` for finetuning GLUE Task.
