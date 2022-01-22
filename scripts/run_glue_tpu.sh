@@ -14,20 +14,20 @@ python3 xla_spawn.py --num_cores 8 \
     --max_seq_length 512 \
     --per_device_train_batch_size 16 \
     --per_device_eval_batch_size 32 \
-    --learning_rate 5e-5 \
-    --adafactor \
-    --num_train_epochs 20 \
+    --learning_rate 1e-4 \
+    --warmup_ratio 0.1 \
+    --num_train_epochs 100 \
     --logging_steps 100 \
     --output_dir eval_outputs/$TASK_NAME \
     --overwrite_output_dir \
     --cache_dir cache \
-    --seed 42 \
+    --seed 1234 \
     --evaluation_strategy epoch \
     --save_strategy epoch \
     --load_best_model_at_end True \
     --metric_for_best_model eval_matthews_correlation \
     --greater_is_better True \
-    --early_stopping_patience 5
+    --early_stopping_patience 100
 
 rm -rf eval_outputs/*/checkpoint*
     
@@ -68,20 +68,20 @@ python3 xla_spawn.py --num_cores 8 \
     --max_seq_length 512 \
     --per_device_train_batch_size 16 \
     --per_device_eval_batch_size 32 \
-    --learning_rate 5e-5 \
+    --learning_rate 1e-4 \
     --warmup_ratio 0.1 \
-    --num_train_epochs 20 \
+    --num_train_epochs 100 \
     --logging_steps 100 \
     --output_dir eval_outputs/$TASK_NAME \
     --overwrite_output_dir \
     --cache_dir cache \
-    --seed 42 \
+    --seed 777 \
     --evaluation_strategy epoch \
     --save_strategy epoch \
     --load_best_model_at_end True \
-    --metric_for_best_model eval_f1 \
+    --metric_for_best_model eval_combined_score \
     --greater_is_better True \
-    --early_stopping_patience 5
+    --early_stopping_patience 40
 
 rm -rf eval_outputs/*/checkpoint*
 
@@ -135,7 +135,7 @@ python3 xla_spawn.py --num_cores 8 \
     --evaluation_strategy epoch \
     --save_strategy epoch \
     --load_best_model_at_end True \
-    --metric_for_best_model eval_accuracy \
+    --metric_for_best_model eval_combined_score \
     --greater_is_better True \
     --early_stopping_patience 5
 
@@ -208,19 +208,19 @@ python3 xla_spawn.py --num_cores 8 \
     --max_seq_length 512 \
     --per_device_train_batch_size 16 \
     --per_device_eval_batch_size 32 \
-    --learning_rate 5e-5 \
+    --learning_rate 1e-4 \
     --warmup_ratio 0.1 \
-    --num_train_epochs 20 \
+    --num_train_epochs 100 \
     --logging_steps 100 \
     --output_dir eval_outputs/$TASK_NAME \
     --overwrite_output_dir \
     --cache_dir cache \
-    --seed 42 \
+    --seed 777 \
     --evaluation_strategy epoch \
     --save_strategy epoch \
     --load_best_model_at_end True \
     --metric_for_best_model eval_accuracy \
     --greater_is_better True \
-    --early_stopping_patience 5
+    --early_stopping_patience 40
 
 rm -rf eval_outputs/*/checkpoint*
